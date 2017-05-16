@@ -61,7 +61,7 @@ consul:
 ```
 
 `url` is optional and is only used if the `host` is not specified. 'aclToken' is used to control access to data and APIs. `ping` attempts a ping before before returning the Consul instance, the default value is true. `timeoutMillis` defines the timeout for `connect`, `write` and `read` on HTTP calls in milliseconds. `basicAuth` defines the credentials used for basic Authentication. `headers` is a list of http properties.
-`proxy` takes a fullly qualified class name and sets a proxy for the client. The proxy must extends java.net.Proxy. `hostnameVerifier` takes a fullly qualified class name. The hostname must extends javax.net.ssl.HostnameVerifier. `consulBookend` takes a fullly qualified class name. The consulBookend must extends com.orbitz.consul.util.bookend.ConsulBookend. `executorService` takes a fullly qualified class name. The executorService must extends java.util.concurrent.ExecutorService. `sslContext` takes a fullly qualified class name and sets the SSL contexts for HTTPS agents. The sslContext must extends javax.net.ssl.SSLContext.
+`proxy` takes a fullly qualified class name and sets a proxy for the client. The proxy must extends java.net.Proxy. `hostnameVerifier` takes a fullly qualified class name. The hostname must extends javax.net.ssl.HostnameVerifier. `consulBookend` takes a fully qualified class name. The consulBookend must extends com.orbitz.consul.util.bookend.ConsulBookend. `executorService` takes a fullly qualified class name. The executorService must extends java.util.concurrent.ExecutorService. `sslContext` takes a fullly qualified class name and sets the SSL contexts for HTTPS agents. The sslContext must extends javax.net.ssl.SSLContext.
 
 # How to use
 
@@ -96,7 +96,7 @@ This client is used like this:
 public class SomeClass {
     @Inject
     @Named("consul1")
-    private Consul consul1;
+    private Consul remoteConsul;
 }
 ```
 
