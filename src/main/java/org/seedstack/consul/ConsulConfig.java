@@ -8,7 +8,6 @@
 package org.seedstack.consul;
 
 import org.seedstack.coffig.Config;
-import org.seedstack.coffig.SingleValue;
 
 import com.orbitz.consul.util.bookend.ConsulBookend;
 import java.net.Proxy;
@@ -33,12 +32,8 @@ public class ConsulConfig {
     }
 
     public static class ClientConfig {
-        @SingleValue
         private String host = new String();
-        
-        @SingleValue
-        private int port = DEFAULT_CONSUL_PORT;
-        
+        private int port = DEFAULT_CONSUL_PORT;        
         private String url;
         private String aclToken;
         private Map<String, String> timeoutMillis = new HashMap<String, String>();
