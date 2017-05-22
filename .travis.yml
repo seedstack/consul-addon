@@ -10,7 +10,7 @@ language: java
 jdk: oraclejdk8
 
 before_install:
-  - 'if [[ ! -f $CONSUL_DIR/consul ]]; then (mkdir -p $CONSUL_DIR && cd $CONSUL_DIR && wget https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip --no-check-certificate && unzip ${CONSUL_VERSION}_linux_amd64.zip); fi'
+  - 'if [[ ! -f $CONSUL_DIR/consul ]]; then (mkdir -p $CONSUL_DIR && cd $CONSUL_DIR && wget https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip --no-check-certificate && unzip consul_${CONSUL_VERSION}_linux_amd64.zip); fi'
   - $CONSUL_DIR/consul --version
   - $CONSUL_DIR/consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul &
 
