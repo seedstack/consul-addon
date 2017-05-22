@@ -1,12 +1,23 @@
 sudo: false
 
+env:
+  global:
+    - CONSUL_VERSION=0.8.3
+    - CONSUL_DIR=$HOME/consul_$CONSUL_VERSION
+
 language: java
 
 jdk: oraclejdk8
 
+before_install:
+  - 'if [[ ! -f $CONSUL_DIR/consul ]]; then (mkdir -p $CONSUL_DIR && cd $CONSUL_DIR && wget https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip --no-check-certificate && unzip ${CONSUL_VERSION}_linux_amd64.zip); fi'
+  - $CONSUL_DIR/consul --version
+  - $CONSUL_DIR/consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul &
+
 cache:
   directories:
     - "$HOME/.m2/repository"
+    - $CONSUL_DIR
 
 install:
   - echo "<settings><servers><server><id>bintray</id><username>\${env.BINTRAY_USER}</username><password>\${env.BINTRAY_KEY}</password></server></servers></settings>" > ~/.m2/settings.xml
