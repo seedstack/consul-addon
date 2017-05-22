@@ -11,7 +11,6 @@ import org.seedstack.shed.exception.ErrorCode;
 
 enum ConsulErrorCode implements ErrorCode {
     CANNOT_CREATE_CLIENT,
-    CLASS_NOT_ACCESSIBLE,
-    CLASS_NOT_INSTANTIATE,
-    NUMBER_FORMAT_EXCEPTION
+    CANNOT_INSTANTIATE_CLASS,
+    NO_URL_OR_HOST_SPECIFIED
 }

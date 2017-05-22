@@ -7,160 +7,184 @@
  */
 package org.seedstack.consul;
 
-import org.seedstack.coffig.Config;
-
+import com.google.common.net.HostAndPort;
 import com.orbitz.consul.util.bookend.ConsulBookend;
-import java.net.Proxy;
+import org.seedstack.coffig.Config;
+import org.seedstack.coffig.SingleValue;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 
 @Config("consul")
 public class ConsulConfig {
-	private static final int DEFAULT_CONSUL_PORT = 8500;
-	private Map<String, ClientConfig> clients = new HashMap<>();
+    private Map<String, ClientConfig> clients = new HashMap<>();
 
-    public Map<String, ClientConfig> getConsulClients() {
+    public Map<String, ClientConfig> getClients() {
         return Collections.unmodifiableMap(clients);
     }
 
-    public void addConsulClient(String name, ClientConfig config) {
+    public void addClient(String name, ClientConfig config) {
         clients.put(name, config);
     }
 
     public static class ClientConfig {
-        private String host = new String();
-        private int port = DEFAULT_CONSUL_PORT;        
+        @SingleValue
         private String url;
+        private HostAndPort host;
         private String aclToken;
-        private Map<String, String> timeoutMillis = new HashMap<String, String>();
-        private Map<String, String> basicAuth = new HashMap<String, String>();
-        private Boolean ping;
+        private boolean ping = true;
+        private String user;
+        private String password;
+        private TimeoutConfig timeouts = new TimeoutConfig();
         private Class<? extends ConsulBookend> consulBookend;
         private Class<? extends ExecutorService> executorService;
         private Class<? extends HostnameVerifier> hostnameVerifier;
-        private Class<? extends Proxy> proxy;
         private Class<? extends SSLContext> sslContext;
-        private Map<String, String> headers = new HashMap<String, String>();
-        
-        public String getHost() {
+        private Map<String, String> headers = new HashMap<>();
+
+        public String getUrl() {
+            return url;
+        }
+
+        public ClientConfig setUrl(String url) {
+            this.url = url;
+            return this;
+        }
+
+        public HostAndPort getHost() {
             return host;
         }
 
-		public String getUrl() {
-			return url;
-		}
-
-		public ClientConfig setUrl(String url) {
-			this.url = url;
-			return this;
-		}
-
-		public Class<? extends HostnameVerifier> getHostnameVerifier() {
-			return hostnameVerifier;
-		}
-
-		public ClientConfig setHostnameVerifier(Class<? extends HostnameVerifier> hostnameVerifier) {
-			this.hostnameVerifier = hostnameVerifier;
-			return this;
-		}
-
-		public Class<? extends SSLContext> getSslContext() {
-			return sslContext;
-		}
-
-		public ClientConfig setSslContext(Class<? extends SSLContext> sslContext) {
-			this.sslContext = sslContext;
-			return this;
-		}
-
-		public String getAclToken() {
-			return aclToken;
-		}
-
-		public ClientConfig setAclToken(String aclToken) {
-			this.aclToken = aclToken;
-			return this;
-		}
-
-		public Map<String, String> getTimeoutMillis() {
-			return timeoutMillis;
-		}
-
-		public ClientConfig setTimeoutMillis(Map<String, String> timeoutMillis) {
-			this.timeoutMillis = timeoutMillis;
-			return this;
-		}
-
-		public Map<String, String> getBasicAuth() {
-			return basicAuth;
-		}
-
-		public ClientConfig setBasicAuth(Map<String, String> basicAuth) {
-			this.basicAuth = basicAuth;
-			return this;
-		}
-
-		public Boolean getPing() {
-			return ping;
-		}
-
-		public ClientConfig setPing(Boolean ping) {
-			this.ping = ping;
-			return this;
-		}
-
-		public Class<? extends ConsulBookend> getConsulBookend() {
-			return consulBookend;
-		}
-
-		public ClientConfig setConsulBookend(Class<? extends ConsulBookend> consulBookend) {
-			this.consulBookend = consulBookend;
-			return this;
-		}
-
-		public Class<? extends ExecutorService> getExecutorService() {
-			return executorService;
-		}
-
-		public ClientConfig setExecutorService(Class<? extends ExecutorService> executorService) {
-			this.executorService = executorService;
-			return this;
-		}
-
-		public Class<? extends Proxy> getProxy() {
-			return proxy;
-		}
-
-		public ClientConfig setProxy(Class<? extends Proxy> proxy) {
-			this.proxy = proxy;
-			return this;
-		}
-
-		public Map<String, String> getHeaders() {
-			return headers;
-		}
-
-		public ClientConfig setHeaders(Map<String, String> headers) {
-			this.headers = headers;
-			return this;
-		}
-
-		public ClientConfig addHost(String host) {
+        public ClientConfig setHost(HostAndPort host) {
             this.host = host;
             return this;
-        }		
+        }
 
-        public int getPort() {
-			return port;
-		}
+        public String getAclToken() {
+            return aclToken;
+        }
 
-		public ClientConfig setPort(int port) {
-			this.port = port;
-			return this;
-		}
+        public ClientConfig setAclToken(String aclToken) {
+            this.aclToken = aclToken;
+            return this;
+        }
+
+        public boolean isPing() {
+            return ping;
+        }
+
+        public ClientConfig setPing(boolean ping) {
+            this.ping = ping;
+            return this;
+        }
+
+        public String getUser() {
+            return user;
+        }
+
+        public ClientConfig setUser(String user) {
+            this.user = user;
+            return this;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public ClientConfig setPassword(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public TimeoutConfig getTimeouts() {
+            return timeouts;
+        }
+
+        public ClientConfig setTimeouts(TimeoutConfig timeouts) {
+            this.timeouts = timeouts;
+            return this;
+        }
+
+        public Class<? extends ConsulBookend> getConsulBookend() {
+            return consulBookend;
+        }
+
+        public ClientConfig setConsulBookend(Class<? extends ConsulBookend> consulBookend) {
+            this.consulBookend = consulBookend;
+            return this;
+        }
+
+        public Class<? extends ExecutorService> getExecutorService() {
+            return executorService;
+        }
+
+        public ClientConfig setExecutorService(Class<? extends ExecutorService> executorService) {
+            this.executorService = executorService;
+            return this;
+        }
+
+        public Class<? extends HostnameVerifier> getHostnameVerifier() {
+            return hostnameVerifier;
+        }
+
+        public ClientConfig setHostnameVerifier(Class<? extends HostnameVerifier> hostnameVerifier) {
+            this.hostnameVerifier = hostnameVerifier;
+            return this;
+        }
+
+        public Class<? extends SSLContext> getSslContext() {
+            return sslContext;
+        }
+
+        public ClientConfig setSslContext(Class<? extends SSLContext> sslContext) {
+            this.sslContext = sslContext;
+            return this;
+        }
+
+        public Map<String, String> getHeaders() {
+            return Collections.unmodifiableMap(headers);
+        }
+
+        public ClientConfig addHeader(String name, String value) {
+            this.headers.put(name, value);
+            return this;
+        }
+
+        public static class TimeoutConfig {
+            private Long connect;
+            private Long read;
+            private Long write;
+
+            public Long getConnect() {
+                return connect;
+            }
+
+            public TimeoutConfig setConnect(Long connect) {
+                this.connect = connect;
+                return this;
+            }
+
+            public Long getRead() {
+                return read;
+            }
+
+            public TimeoutConfig setRead(Long read) {
+                this.read = read;
+                return this;
+            }
+
+            public Long getWrite() {
+                return write;
+            }
+
+            public TimeoutConfig setWrite(Long write) {
+                this.write = write;
+                return this;
+            }
+        }
     }
 }

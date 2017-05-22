@@ -10,10 +10,11 @@ package org.seedstack.consul.internal;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 import com.orbitz.consul.Consul;
+
 import java.util.Map;
 
-class ConsulModule extends AbstractModule {	
-	private Map<String, Consul> consulWrappers;
+class ConsulModule extends AbstractModule {
+    private final Map<String, Consul> consulWrappers;
 
     ConsulModule(Map<String, Consul> consulWrappers) {
         this.consulWrappers = consulWrappers;
@@ -21,10 +22,9 @@ class ConsulModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        if (consulWrappers != null && !consulWrappers.isEmpty()) {
-            consulWrappers.forEach((consulClientName, consulClient) -> {
-            	bind(Consul.class).annotatedWith(Names.named(consulClientName)).toInstance(consulClient);
-            });
-        }
+        consulWrappers.forEach((consulClientName, consulClient) -> bind(Consul.class)
+                .annotatedWith(Names.named(consulClientName))
+                .toInstance(consulClient)
+        );
     }
 }
