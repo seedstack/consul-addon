@@ -8,15 +8,12 @@
 package org.seedstack.consul;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.seedstack.seed.Configuration;
 import org.seedstack.seed.it.AbstractSeedIT;
 
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
-import com.orbitz.consul.KeyValueClient;
 
 import javax.inject.Inject;
 import javax.inject.Named;
