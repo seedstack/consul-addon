@@ -25,6 +25,7 @@
         <seed.version>3.2.1-SNAPSHOT</seed.version>
 		<compatibility.skip>true</compatibility.skip>
         <bintray.package>consul-addon</bintray.package>
+        <jackson.version>2.7.4</jackson.version>
     </properties>
     
     <build>
@@ -66,6 +67,26 @@
         </pluginManagement>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.seedstack.seed</groupId>
@@ -77,6 +98,11 @@
 		    <artifactId>consul-client</artifactId>
 		    <version>0.14.0</version>
 		</dependency>
+		<dependency>
+            <groupId>org.seedstack.coffig</groupId>
+            <artifactId>coffig</artifactId>
+            <version>2.0.2-SNAPSHOT</version>
+        </dependency>
 
 		<!-- TEST -->
         <dependency>
@@ -90,6 +116,11 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seedstack.coffig</groupId>
+            <artifactId>coffig</artifactId>
+            <version>2.1.0</version>
         </dependency>
     </dependencies>
 

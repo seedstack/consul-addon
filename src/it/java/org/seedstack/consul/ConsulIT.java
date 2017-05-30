@@ -8,11 +8,15 @@
 package org.seedstack.consul;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.seedstack.seed.Configuration;
 import org.seedstack.seed.it.AbstractSeedIT;
 
 import com.orbitz.consul.AgentClient;
 import com.orbitz.consul.Consul;
+import com.orbitz.consul.KeyValueClient;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,6 +26,9 @@ public class ConsulIT extends AbstractSeedIT {
     @Named("consul1")
     private Consul remoteConsul;
 
+    @Configuration("MyApp.someStorageKey")
+    private String remoteStorageKey;
+
     @Test
     public void consulIsInjectable() {
         Assertions.assertThat(remoteConsul).isNotNull();
@@ -30,7 +37,11 @@ public class ConsulIT extends AbstractSeedIT {
     @Test
     public void remote_agent_client() {
     	AgentClient agentClient = remoteConsul.agentClient();
-    	
     	Assertions.assertThat(agentClient).isNotNull();
+    }
+    
+    @Test
+    public void getConsulStorageConfig() {
+    	Assertions.assertThat(remoteStorageKey).isEqualTo("foo");
     }
 }

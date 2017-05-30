@@ -11,3 +11,6 @@ consul:
     consul1:
         host: localhost
         port: 8500
+
+MyApp:
+    someStorageKey: ${consul.clients.consul1.store.somekey.somesubkey}

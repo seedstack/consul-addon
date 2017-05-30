@@ -15,6 +15,7 @@ import io.nuun.kernel.api.plugin.InitState;
 import io.nuun.kernel.api.plugin.context.InitContext;
 import org.seedstack.consul.ConsulConfig;
 import org.seedstack.seed.SeedException;
+import org.seedstack.seed.core.SeedRuntime;
 import org.seedstack.seed.core.internal.AbstractSeedPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +30,19 @@ import java.util.Optional;
 public class ConsulPlugin extends AbstractSeedPlugin {
     private static final int DEFAULT_CONSUL_PORT = 8500;
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsulPlugin.class);
-    private final Map<String, Consul> consulClients = new HashMap<>();
+    private Map<String, Consul> consulClients = new HashMap<>();
+    private SeedRuntime seedRuntime;
 
     @Override
     public String name() {
         return "consul";
     }
+
+    @Override
+    public void setup(SeedRuntime seedRuntime) {
+        this.seedRuntime = seedRuntime;
+    }
+
 
     @Override
     public InitState initialize(InitContext initContext) {
@@ -50,7 +58,19 @@ public class ConsulPlugin extends AbstractSeedPlugin {
             LOGGER.info("No Consul configured, Consul support disabled");
         }
 
+        configureConsulProvider();
+
         return InitState.INITIALIZED;
+    }
+
+    private void configureConsulProvider() {
+        ConsulProvider consulProvider = new ConsulProvider();
+        Optional.ofNullable(consulClients).ifPresent(consulProvider::addAllConsul);
+
+        seedRuntime.registerConfigurationProvider(
+                consulProvider,
+                Integer.MAX_VALUE
+        );
     }
 
     @Override

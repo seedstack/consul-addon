@@ -145,7 +145,7 @@ public class ConsulConfig {
             return this;
         }
 
-        public Map<String, String> getHeaders() {
+		public Map<String, String> getHeaders() {
             return Collections.unmodifiableMap(headers);
         }
 
