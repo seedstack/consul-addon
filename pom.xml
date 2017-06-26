@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.seedstack.poms</groupId>
         <artifactId>parent-internal</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <groupId>org.seedstack.addons.consul</groupId>
@@ -22,12 +22,13 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <seed.version>3.2.1-SNAPSHOT</seed.version>
-		<compatibility.skip>true</compatibility.skip>
+        <seed.version>3.3.0-SNAPSHOT</seed.version>
+
+        <compatibility.skip>true</compatibility.skip>
+
         <bintray.package>consul-addon</bintray.package>
-        <jackson.version>2.7.4</jackson.version>
     </properties>
-    
+
     <build>
         <pluginManagement>
             <plugins>
@@ -70,18 +71,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-guava</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
         </dependencies>
@@ -94,17 +90,12 @@
             <version>${seed.version}</version>
         </dependency>
         <dependency>
-		    <groupId>com.orbitz.consul</groupId>
-		    <artifactId>consul-client</artifactId>
-		    <version>0.14.0</version>
-		</dependency>
-        <dependency>
-            <groupId>org.seedstack.coffig</groupId>
-            <artifactId>coffig</artifactId>
-            <version>2.1.0</version>
+            <groupId>com.orbitz.consul</groupId>
+            <artifactId>consul-client</artifactId>
+            <version>0.14.0</version>
         </dependency>
 
-		<!-- TEST -->
+        <!-- TEST -->
         <dependency>
             <groupId>org.seedstack.seed</groupId>
             <artifactId>seed-testing</artifactId>
