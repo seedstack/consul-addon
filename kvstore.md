@@ -66,6 +66,17 @@ public class SomeClass {
 You can access to the store anytime:
 
 ```java
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.orbitz.consul.Consul;
+import com.orbitz.consul.KeyValueClient;
+
+//...
+
+@Inject
+@Named("consulName")
+private Consul remoteConsul; 
+
 public void SomeFunction {
     KeyValueClient kvClient = remoteConsul.keyValueClient();
 
