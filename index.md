@@ -13,72 +13,125 @@ menu:
         weight: 10
 ---
 
-The Consul add-on allows you to configure, inject and use Consul clients.
+The Consul add-on allows you to configure, inject and use Java Consul clients.
 
 {{< dependency g="org.seedstack.addons.consul" a="consul" >}}
 
 {{% callout info %}}
-For more information on Consul API: [https://www.consul.io/api/index.html](https://www.consul.io/api/index.html)
+For more information on Consul HTTP API, see [https://www.consul.io/api/index.html](https://www.consul.io/api/index.html).
+This add-on uses the [official Java client](https://github.com/OrbitzWorldwide/consul-client) which is a thin wrapper around the HTTP API.
 {{% /callout %}}
 
 # Configuration
 
-To access a Consul, you need to declare a client in configuration, and in its basic form is:
+To access a Consul server, you need to declare a client in configuration:
 
 ```yaml
 consul:
   clients:
     consulName:
-        host: base.url.to.consul
-        port: port.consul
+      # Host of the Consul server
+      host: (String)
+      # Port of the Consul server
+      port: (String)
+      # Instead of host and port, you can use an URL
+      url: (URL)
+      # The token used for access control
+      aclToken: (String)
+      # If true (default value), a ping will be attempted on startup
+      ping: (boolean)
+      # Timeout values in milliseconds for HTTP requests
+      timeoutMillis:
+        # Connection timeout
+        connect: (int)
+        # Read timeout
+        read: (int)
+        # Write timeout
+        write: (int)
+      # The credentials for basic authentication 
+      basicAuth:
+        # The user name
+        username: value
+        # The password
+        password: value
+      # HTTP headers added to outgoing requests with the name of the header as key  
+      headers:
+        headerName: (String)
+      # The class used to connect to the Consul server if any 
+      proxy: (Class<? extends java.net.Proxy>)      
+      # The class used to verify the hostname of the Consul server
+      hostnameVerifier: (Class<? extends javax.net.ssl.HostnameVerifier>)
+      # The consul bookend to be used
+      consulBookend: (Class<? extends com.orbitz.consul.util.bookend.ConsulBookend>)
+      # The executor service to be used
+      executorService: (Class<? extends java.util.concurrent.ExecutorService>)
+      # The SSL context to be used
+      sslContext: (Class<? extends javax.net.ssl.SSLContext)
 ```
 
-With all the options, the configuration file looks like this:
+# Usage
+
+## Consul API
+
+To use a configured Consul client, simply inject it with its configured name:
+
+```java
+import javax.inject.Inject;
+import javax.inject.name.Named;
+import com.orbitz.consul.Consul;
+
+public class SomeClass {
+  @Inject
+  @Named("someConsul")
+  private Consul remoteConsul;
+}
+```
+
+{{% callout info %}}
+You can find more example about the Java API [here](https://github.com/OrbitzWorldwide/consul-client).
+{{% /callout %}}
+
+## Key/value store through configuration
+
+The key/value store of each Consul client is accessible programmatically using the Consul API, but you can also access
+its values at the `consul.clients.<clientName>.store` tree node: 
 
 ```yaml
 consul:
   clients:
-    consulName:
-        host: base.url.to.consul
-        port: port.consul
-        url: http://url.to.consul:port
-        aclToken: value
-        ping: true
-        timeoutMillis:
-            connect:
-            read:
-            write:
-        basicAuth:
-            username: value
-            password: value
-        headers:
-            propertyName1: value1
-        proxy: org.mycompany.myapp.Proxy      
-        hostnameVerifier: org.mycompany.myapp.HostnameVerifier
-        consulBookend: org.mycompany.myapp.ConsulBookend
-        executorService: org.mycompany.myapp.ExecutorService
-        sslContext: org.mycompany.myapp.SslContext
+    consul1:
+        host: localhost
+        port: 8500
+        # The key/value store is accessible through this node
+        store: ...
 ```
 
-`consulName` is the name you give to the remote consul.
-`url` is optional and is only used if the `host` is not specified. 'aclToken' is used to control access to data and APIs. `ping` attempts a ping before before returning the Consul instance, the default value is true. `timeoutMillis` defines the timeout for `connect`, `write` and `read` on HTTP calls in milliseconds. `basicAuth` defines the credentials used for basic Authentication. `headers` is a list of http properties.
-`proxy` takes a fullly qualified class name and sets a proxy for the client. The proxy must extends java.net.Proxy. `hostnameVerifier` takes a fullly qualified class name. The hostname must extends javax.net.ssl.HostnameVerifier. `consulBookend` takes a fully qualified class name. The consulBookend must extends com.orbitz.consul.util.bookend.ConsulBookend. `executorService` takes a fullly qualified class name. The executorService must extends java.util.concurrent.ExecutorService. `sslContext` takes a fullly qualified class name and sets the SSL contexts for HTTPS agents. The sslContext must extends javax.net.ssl.SSLContext.
+Therefore, you can access any consul key/store value, by using [configuration macros]({{< ref "docs/seed/configuration.md#Macros" >}}):
 
-# How to use
+```yaml
+consul:
+  clients:
+    consul1:
+        host: localhost
+        port: 8500
 
-To use a configured Consul client, simply inject it where it needed:
+myAppConfig:
+    someKey: ${consul.clients.consul1.store.some.key}
+```
 
-  ```java
-  public class SomeClass {
-      @Inject
-      @Named("consulName")
-      private Consul remoteConsul;
-  }
-  ```
+You can then inject the configuration value into your code like this:
 
-  {{% callout info %}}
-  You can find more example about the Java API: [here](https://github.com/OrbitzWorldwide/consul-client)
-  {{% /callout %}}
+```java
+public class SomeClass {
+  @Configuration("myAppConfig.someKey")
+  private String someKey;     
+}
+```
+
+{{% callout tips %}}
+The consul storage key can also be referenced directly but using a macro allows to isolate your code from the origin of the
+key.
+{{% /callout %}}
 
 # Example
 
@@ -87,29 +140,39 @@ Configuration for a Consul server running on the same machine:
 ```yaml
 consul:
   clients:
-    consul1:
+    someConsul:
         host: localhost
         port: 8500
 ```
 
 This client is used like this:
+
 ```java
+import javax.inject.Inject;
+import javax.inject.name.Named;
+import com.orbitz.consul.Consul;
+
 public class SomeClass {
     @Inject
-    @Named("consul1")
-    private Consul remoteConsul;
+    @Named("someConsul")
+    private Consul someConsul;
 }
 ```
 
-And now, you can register a service:
-```java
-public void SomeFunction {
-    AgentClient agentClient = remoteConsul.agentClient();
-    String serviceName = "testService";
-    String serviceId = "uniqueId";
-    String servicePort = 8080;
+As any other operation, registering a service is done through the native Consul API:
 
-    agentClient.register(servicePort, 3L, serviceName, serviceId); // registers with a TTL of 3 seconds
-    agentClient.pass(serviceId);    // Check
+```java
+public class SomeClass {
+    @Inject
+    @Named("someConsul")
+    private Consul someConsul;
+
+    public void someMethod() {
+        AgentClient agentClient = someConsul.agentClient();
+        // registers with a TTL of 3 seconds
+        agentClient.register(8080, 3L, "testService", "uniqueId");
+        // Check
+        agentClient.pass(serviceId);    
+    }
 }
 ```
