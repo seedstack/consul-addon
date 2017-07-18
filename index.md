@@ -30,16 +30,18 @@ To access a Consul server, you need to declare a client in configuration:
 consul:
   clients:
     consulName:
-      # Host of the Consul server
-      host: (String)
-      # Port of the Consul server
-      port: (String)
-      # Instead of host and port, you can use an URL
+      # URL of the Consul server 
       url: (URL)
+      # Instead of the URL, you can specify the host and port (host:port) of the Consul server
+      host: (HostAndPort)
       # The token used for access control
       aclToken: (String)
       # If true (default value), a ping will be attempted on startup
       ping: (boolean)
+      # The user name for basic authentication
+      username: value
+      # The password for basic authentication
+      password: value
       # Timeout values in milliseconds for HTTP requests
       timeoutMillis:
         # Connection timeout
@@ -48,26 +50,21 @@ consul:
         read: (int)
         # Write timeout
         write: (int)
-      # The credentials for basic authentication 
-      basicAuth:
-        # The user name
-        username: value
-        # The password
-        password: value
-      # HTTP headers added to outgoing requests with the name of the header as key  
-      headers:
-        headerName: (String)
-      # The class used to connect to the Consul server if any 
-      proxy: (Class<? extends java.net.Proxy>)      
       # The class used to verify the hostname of the Consul server
       hostnameVerifier: (Class<? extends javax.net.ssl.HostnameVerifier>)
       # The consul bookend to be used
       consulBookend: (Class<? extends com.orbitz.consul.util.bookend.ConsulBookend>)
       # The executor service to be used
       executorService: (Class<? extends java.util.concurrent.ExecutorService>)
-      # The SSL context to be used
-      sslContext: (Class<? extends javax.net.ssl.SSLContext)
+      # HTTP headers added to outgoing requests with the name of the header as key  
+      headers:
+        headerName: (String)
 ```
+
+{{% callout info %}}
+* SeedStack proxy configuration will automatically be used if any.
+* [SeedStack SSL configuration]({{<ref "docs/seed/manual/crypto.md#ssl" >}}) will be automatically used if any. 
+{{% /callout %}}
 
 # Usage
 
