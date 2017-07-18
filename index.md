@@ -32,30 +32,42 @@ consul:
     consulName:
       # URL of the Consul server 
       url: (URL)
+      
       # Instead of the URL, you can specify the host and port (host:port) of the Consul server
       host: (HostAndPort)
+      
       # The token used for access control
       aclToken: (String)
+      
       # If true (default value), a ping will be attempted on startup
       ping: (boolean)
+      
       # The user name for basic authentication
       username: value
+      
       # The password for basic authentication
       password: value
+      
       # Timeout values in milliseconds for HTTP requests
       timeoutMillis:
         # Connection timeout
         connect: (int)
+        
         # Read timeout
         read: (int)
+        
         # Write timeout
         write: (int)
+        
       # The class used to verify the hostname of the Consul server
       hostnameVerifier: (Class<? extends javax.net.ssl.HostnameVerifier>)
+      
       # The consul bookend to be used
       consulBookend: (Class<? extends com.orbitz.consul.util.bookend.ConsulBookend>)
+      
       # The executor service to be used
       executorService: (Class<? extends java.util.concurrent.ExecutorService>)
+      
       # HTTP headers added to outgoing requests with the name of the header as key  
       headers:
         headerName: (String)
