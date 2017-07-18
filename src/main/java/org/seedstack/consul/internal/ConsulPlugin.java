@@ -8,6 +8,7 @@
 package org.seedstack.consul.internal;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.net.HostAndPort;
 import com.orbitz.consul.Consul;
 import com.orbitz.consul.Consul.Builder;
@@ -17,9 +18,11 @@ import org.seedstack.consul.ConsulConfig;
 import org.seedstack.seed.SeedException;
 import org.seedstack.seed.core.SeedRuntime;
 import org.seedstack.seed.core.internal.AbstractSeedPlugin;
+import org.seedstack.seed.core.internal.crypto.CryptoPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -43,6 +46,10 @@ public class ConsulPlugin extends AbstractSeedPlugin {
         this.seedRuntime = seedRuntime;
     }
 
+    @Override
+    protected Collection<Class<?>> dependencies() {
+        return Lists.newArrayList(CryptoPlugin.class);
+    }
 
     @Override
     public InitState initialize(InitContext initContext) {
@@ -50,9 +57,9 @@ public class ConsulPlugin extends AbstractSeedPlugin {
 
         Map<String, ConsulConfig.ClientConfig> clients = consulConfig.getClients();
         if (!clients.isEmpty()) {
-            clients.forEach((consulClientName, consulClient) -> {
-                LOGGER.info("Creating Consul client {} for remote instance at {}", consulClientName, consulClient.getHost());
-                consulClients.put(consulClientName, buildRemoteConsul(consulClientName, consulClient));
+            clients.forEach((consulClientName, consulClientConfig) -> {
+                LOGGER.info("Creating Consul client {} for remote instance at {}", consulClientName, Optional.ofNullable(consulClientConfig.getUrl()).orElse(consulClientConfig.getHost().toString()));
+                consulClients.put(consulClientName, buildRemoteConsul(consulClientName, consulClientConfig, initContext.dependency(CryptoPlugin.class)));
             });
         } else {
             LOGGER.info("No Consul configured, Consul support disabled");
@@ -90,7 +97,7 @@ public class ConsulPlugin extends AbstractSeedPlugin {
         });
     }
 
-    private Consul buildRemoteConsul(String consulClientName, ConsulConfig.ClientConfig consulClientConfig) {
+    private Consul buildRemoteConsul(String consulClientName, ConsulConfig.ClientConfig consulClientConfig, CryptoPlugin cryptoPlugin) {
         Builder consulBuilder = Consul.builder();
 
         // Base options
@@ -124,8 +131,11 @@ public class ConsulPlugin extends AbstractSeedPlugin {
         Optional.ofNullable(consulClientConfig.getHostnameVerifier()).map(this::instantiateClass).ifPresent(consulBuilder::withHostnameVerifier);
         Optional.ofNullable(consulClientConfig.getConsulBookend()).map(this::instantiateClass).ifPresent(consulBuilder::withConsulBookend);
         Optional.ofNullable(consulClientConfig.getExecutorService()).map(this::instantiateClass).ifPresent(consulBuilder::withExecutorService);
-        Optional.ofNullable(consulClientConfig.getSslContext()).map(this::instantiateClass).ifPresent(consulBuilder::withSslContext);
+
         // Proxy (consulBuilder::withProxy) is already handled by JVM-wide proxy configured in seed-core
+
+        // SSL
+        cryptoPlugin.sslContext().ifPresent(consulBuilder::withSslContext);
 
         // HTTP headers
         consulBuilder.withHeaders(consulClientConfig.getHeaders());

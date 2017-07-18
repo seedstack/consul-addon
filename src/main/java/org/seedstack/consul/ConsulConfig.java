@@ -13,7 +13,6 @@ import org.seedstack.coffig.Config;
 import org.seedstack.coffig.SingleValue;
 
 import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +42,6 @@ public class ConsulConfig {
         private Class<? extends ConsulBookend> consulBookend;
         private Class<? extends ExecutorService> executorService;
         private Class<? extends HostnameVerifier> hostnameVerifier;
-        private Class<? extends SSLContext> sslContext;
         private Map<String, String> headers = new HashMap<>();
 
         public String getUrl() {
@@ -136,16 +134,7 @@ public class ConsulConfig {
             return this;
         }
 
-        public Class<? extends SSLContext> getSslContext() {
-            return sslContext;
-        }
-
-        public ClientConfig setSslContext(Class<? extends SSLContext> sslContext) {
-            this.sslContext = sslContext;
-            return this;
-        }
-
-		public Map<String, String> getHeaders() {
+        public Map<String, String> getHeaders() {
             return Collections.unmodifiableMap(headers);
         }
 
