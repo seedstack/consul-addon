@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.seedstack.poms</groupId>
         <artifactId>parent-internal</artifactId>
-        <version>3.1.0-SNAPSHOT</version>
+        <version>3.1.0</version>
     </parent>
 
     <groupId>org.seedstack.addons.consul</groupId>
@@ -22,7 +22,7 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
-        <seed.version>3.3.0-SNAPSHOT</seed.version>
+        <seed.version>3.3.0</seed.version>
 
         <compatibility.skip>true</compatibility.skip>
 
@@ -93,6 +93,16 @@
             <groupId>com.orbitz.consul</groupId>
             <artifactId>consul-client</artifactId>
             <version>0.14.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- TEST -->
