@@ -75,7 +75,7 @@ consul:
 
 {{% callout info %}}
 * SeedStack proxy configuration will automatically be used if any.
-* [SeedStack SSL configuration]({{<ref "docs/seed/manual/crypto.md#ssl" >}}) will be automatically used if any. 
+* [SeedStack SSL configuration]({{<ref "docs/core/crypto.md#ssl" >}}) will be automatically used if any. 
 {{% /callout %}}
 
 # Usage
@@ -115,7 +115,7 @@ consul:
         store: ...
 ```
 
-Therefore, you can access any consul key/store value, by using [configuration macros]({{< ref "docs/seed/configuration.md#Macros" >}}):
+Therefore, you can access any consul key/store value, by using [configuration macros]({{< ref "docs/core/configuration.md#Macros" >}}):
 
 ```yaml
 consul:
