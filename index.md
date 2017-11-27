@@ -12,7 +12,7 @@ zones:
 noMenu: true    
 ---
 
-The Consul add-on allows you to configure, inject and use Java Consul clients.
+The Consul add-on allows you to configure, inject and use Java Consul clients.<!--more-->
 
 {{< dependency g="org.seedstack.addons.consul" a="consul" >}}
 
