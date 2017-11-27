@@ -1,5 +1,6 @@
 ---
 title: "Consul"
+addon: "Consul"
 repo: "https://github.com/seedstack/consul-addon"
 author: Adrien LAUER
 description: "Provides integration with HashiCorp Consul service discovery and distributed configuration."
@@ -8,9 +9,7 @@ tags:
     - configuration
 zones:
     - Addons
-menu:
-    AddonConsul:
-        weight: 10
+noMenu: true    
 ---
 
 The Consul add-on allows you to configure, inject and use Java Consul clients.
@@ -22,7 +21,7 @@ For more information on Consul HTTP API, see [https://www.consul.io/api/index.ht
 This add-on uses the [official Java client](https://github.com/OrbitzWorldwide/consul-client) which is a thin wrapper around the HTTP API.
 {{% /callout %}}
 
-# Configuration
+## Configuration
 
 To access a Consul server, you need to declare a client in configuration:
 
@@ -78,9 +77,9 @@ consul:
 * [SeedStack SSL configuration]({{<ref "docs/core/crypto.md#ssl" >}}) will be automatically used if any. 
 {{% /callout %}}
 
-# Usage
+## Usage
 
-## Consul API
+### Consul API
 
 To use a configured Consul client, simply inject it with its configured name:
 
@@ -100,7 +99,7 @@ public class SomeClass {
 You can find more example about the Java API [here](https://github.com/OrbitzWorldwide/consul-client).
 {{% /callout %}}
 
-## Key/value store through configuration
+### Key/value store through configuration
 
 The key/value store of each Consul client is accessible programmatically using the Consul API, but you can also access
 its values at the `consul.clients.<clientName>.store` tree node: 
@@ -142,7 +141,7 @@ The consul storage key can also be referenced directly but using a macro allows 
 key.
 {{% /callout %}}
 
-# Example
+## Example
 
 Configuration for a Consul server running on the same machine:
 
